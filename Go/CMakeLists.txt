@@ -1,0 +1,13 @@
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+project(helloworld_go Go)
+
+file(GLOB SRC_FILES CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.go
+)
+
+add_executable(${PROJECT_NAME} ${SRC_FILES})
+
+install(TARGETS ${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
+)

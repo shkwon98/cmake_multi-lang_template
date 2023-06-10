@@ -1,0 +1,13 @@
+project(helloworld_c
+    LANGUAGES C
+)
+
+file(GLOB SRC_FILES CONFIGURE_DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
+)
+
+add_executable(${PROJECT_NAME} ${SRC_FILES})
+
+install(TARGETS ${PROJECT_NAME}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
+)

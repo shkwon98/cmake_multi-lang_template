@@ -1,21 +1,3 @@
-#############################################################################
-# CMake-Golang
-#############################################################################
-# Copyright 2017 Joseph Benden <joe@benden.us>
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#############################################################################
-
 if(NOT CMAKE_Go_COMPILER)
   if(NOT $ENV{GO_COMPILER} STREQUAL "")
     get_filename_component(CMAKE_Go_COMPILER_INIT $ENV{GO_COMPILER} PROGRAM PROGRAM_ARGS CMAKE_Go_FLAGS_ENV_INIT)
@@ -43,24 +25,20 @@ if(NOT CMAKE_Go_COMPILER)
     set(CMAKE_Go_COMPILER ${CMAKE_Go_COMPILER_INIT} CACHE PATH "Go Compiler")
   else()
     find_program(CMAKE_Go_COMPILER
-      NAMES go go.exe
+      NAMES go
       PATHS ${Go_BIN_PATH}
     )
-
-    execute_process(COMMAND ${CMAKE_Go_COMPILER} version OUTPUT_VARIABLE CMAKE_Go_COMPILER_ID OUTPUT_STRIP_TRAILING_WHITESPACE)
-    string(REPLACE "go version " "" CMAKE_Go_COMPILER_ID ${CMAKE_Go_COMPILER_ID})
-
-    message(STATUS "The Go compiler identification is ${CMAKE_Go_COMPILER_ID}")
-
-    # TODO: Test for working Golang compiler, or complain...
-    # message(STATUS "Check for working Go compiler: ${CMAKE_Go_COMPILER}")
+    EXEC_PROGRAM(${CMAKE_Go_COMPILER} ARGS version OUTPUT_VARIABLE GOLANG_VERSION)
+    STRING(REGEX MATCH "go[0-9]+.[0-9]+.[0-9]+[ /A-Za-z0-9]*" VERSION "${GOLANG_VERSION}")
+    message("-- The Golang compiler identification is ${VERSION}")
+    message("-- Check for working Golang compiler: ${CMAKE_Go_COMPILER}")
   endif()
 
 endif()
 
 mark_as_advanced(CMAKE_Go_COMPILER)
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeGoCompiler.cmake.in"
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/CMakeGoCompiler.cmake.in
   ${CMAKE_PLATFORM_INFO_DIR}/CMakeGoCompiler.cmake @ONLY)
 
 set(CMAKE_Go_COMPILER_ENV_VAR "GO_COMPILER")
